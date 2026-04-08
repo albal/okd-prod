@@ -1,0 +1,22 @@
+apiVersion: ocs.openshift.io/v1
+kind: StorageCluster
+metadata:
+  name: ocs-storagecluster
+  namespace: openshift-storage
+spec:
+  manageNodes: false
+  monDataDirHostPath: /var/lib/rook
+  storageDeviceSets:
+    - name: ocs-deviceset
+      count: 1 # Number of disks per node
+      dataPVCTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 256Gi # Match your disk size
+          storageClassName: odf-raw-disks
+          volumeMode: Block
+      replica: 3
+      resources: {}
