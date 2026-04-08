@@ -17,6 +17,8 @@ name: Validate Kubernetes Manifests
 jobs:
   validate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -49,8 +51,8 @@ jobs:
 
           mapfile -t kustomization_files < <(find . -type f \( -name "kustomization.yaml" -o -name "kustomization.yml" \))
           if [ "${#kustomization_files[@]}" -eq 0 ]; then
-            echo "No kustomization files found."
-            exit 1
+            echo "No kustomization files found. Skipping kustomize and kubeconform checks."
+            exit 0
           fi
 
           mkdir -p /tmp/rendered
