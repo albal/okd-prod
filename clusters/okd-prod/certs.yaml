@@ -41,7 +41,7 @@ metadata:
 spec:
   secretName: ingress-certs-public
   issuerRef:
-    name: letsencrypt-cloudflare
+    name: letsencrypt-prod
     kind: ClusterIssuer
   commonName: "*.apps.okd.dev.tsew.net"  # Your wildcard apps domain
   dnsNames:
