@@ -43,6 +43,8 @@ spec:
   issuerRef:
     name: letsencrypt-cloudflare
     kind: ClusterIssuer
+  acme:
+    email: github@tsew.net
   commonName: "*.apps.okd.dev.tsew.net" # Your wildcard apps domain
   dnsNames:
   - "*.apps.okd.dev.tsew.net"
