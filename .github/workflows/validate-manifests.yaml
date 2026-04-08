@@ -1,6 +1,6 @@
 name: Validate Kubernetes Manifests
 
-on:
+"on":
   pull_request:
     paths:
       - "**/*.yaml"
