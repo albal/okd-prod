@@ -54,7 +54,7 @@ metadata:
   name: default
   namespace: openshift-ingress-operator
   annotations:
-    argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/sync-wave: "5"
 spec:
   defaultCertificate:
     name: ingress-certs-public  # cert-manager will create this secret
@@ -80,7 +80,7 @@ kind: APIServer
 metadata:
   name: cluster
   annotations:
-    argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/sync-wave: "5"
 spec:
   servingCerts:
     namedCertificates:
