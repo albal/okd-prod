@@ -12,9 +12,6 @@ spec:
           - key: kubernetes.io/hostname
             operator: In
             values:
-              - dev-okd-master0
-              - dev-okd-master1
-              - dev-okd-master2
               - dev-okd-worker0
               - dev-okd-worker1
               - dev-okd-worker2
@@ -22,4 +19,4 @@ spec:
     - storageClassName: "odf-raw-disks"  # ODF will look for this name
       volumeMode: Block  # ODF requires Block mode, not Filesystem
       devicePaths:
-        - /dev/sdb
+        - /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1
