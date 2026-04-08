@@ -12,16 +12,4 @@ resources:
   - ClusterIssuer.yaml
   - certs.yaml
   - nginx-test.yaml
-
-patches:
-  - target:
-      kind: Deployment
-      name: cert-manager
-      namespace: cert-manager
-    patch: |-
-      - op: add
-        path: /spec/template/spec/containers/0/args/-
-        value: --dns01-recursive-nameservers=1.1.1.1:53,1.0.0.1:53
-      - op: add
-        path: /spec/template/spec/containers/0/args/-
-        value: --dns01-recursive-nameservers-only
+  - cert-manager-config.yaml
