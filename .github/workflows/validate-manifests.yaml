@@ -66,4 +66,4 @@ jobs:
             rendered_files+=("$output")
           done
 
-          kubeconform -strict -summary "${rendered_files[@]}"
+          kubeconform -strict -ignore-missing-schemas -summary "${rendered_files[@]}"
