@@ -35,7 +35,7 @@ spec:
   commonName: api.okd.dev.tsew.net
   dnsNames:
   - api.okd.dev.tsew.net
-  ---
+---
 apiVersion: config.openshift.io/v1
 kind: APIServer
 metadata:
