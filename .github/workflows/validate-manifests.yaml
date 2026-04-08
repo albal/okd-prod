@@ -1,0 +1,67 @@
+name: Validate Kubernetes Manifests
+
+on:
+  pull_request:
+    paths:
+      - "**/*.yaml"
+      - "**/*.yml"
+      - ".github/workflows/validate-manifests.yaml"
+  push:
+    branches:
+      - main
+    paths:
+      - "**/*.yaml"
+      - "**/*.yml"
+      - ".github/workflows/validate-manifests.yaml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          set -euo pipefail
+
+          KUSTOMIZE_VERSION="5.4.2"
+          curl -sSL "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" -o /tmp/kustomize.tar.gz
+          tar -xzf /tmp/kustomize.tar.gz -C /tmp
+          sudo install /tmp/kustomize /usr/local/bin/kustomize
+
+          KUBECONFORM_VERSION="0.6.7"
+          curl -sSL "https://github.com/yannh/kubeconform/releases/download/v${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz" -o /tmp/kubeconform.tar.gz
+          tar -xzf /tmp/kubeconform.tar.gz -C /tmp kubeconform
+          sudo install /tmp/kubeconform /usr/local/bin/kubeconform
+
+          python3 -m pip install --user yamllint
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Lint YAML files
+        run: |
+          set -euo pipefail
+          yamllint -d "{extends: default, rules: {line-length: disable, document-start: disable}}" .
+
+      - name: Build and validate kustomizations
+        run: |
+          set -euo pipefail
+
+          mapfile -t kustomization_files < <(find . -type f \( -name "kustomization.yaml" -o -name "kustomization.yml" \))
+          if [ "${#kustomization_files[@]}" -eq 0 ]; then
+            echo "No kustomization files found."
+            exit 1
+          fi
+
+          mkdir -p /tmp/rendered
+          rendered_files=()
+
+          for file in "${kustomization_files[@]}"; do
+            dir="$(dirname "$file")"
+            output="/tmp/rendered/$(echo "$dir" | tr '/.' '__').yaml"
+            echo "Building ${dir}"
+            kustomize build "$dir" > "$output"
+            rendered_files+=("$output")
+          done
+
+          kubeconform -strict -summary "${rendered_files[@]}"
