@@ -12,9 +12,9 @@ spec:
           - key: kubernetes.io/hostname
             operator: In
             values:
-              - dev-okd-worker0
-              - dev-okd-worker1
-              - dev-okd-worker2
+              - worker0
+              - worker1
+              - worker2
   storageClassDevices:
     - storageClassName: "odf-raw-disks"  # ODF will look for this name
       volumeMode: Block  # ODF requires Block mode, not Filesystem
