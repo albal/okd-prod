@@ -3,6 +3,8 @@ kind: StorageCluster
 metadata:
   name: ocs-storagecluster
   namespace: openshift-storage
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
 spec:
   manageNodes: false
   monDataDirHostPath: /var/lib/rook

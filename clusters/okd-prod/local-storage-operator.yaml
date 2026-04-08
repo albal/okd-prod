@@ -4,7 +4,7 @@ kind: Namespace
 metadata:
   name: openshift-local-storage
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "0"
 ---
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
@@ -23,7 +23,7 @@ metadata:
   name: local-storage-operator
   namespace: openshift-local-storage
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   channel: "stable"
   installPlanApproval: Automatic

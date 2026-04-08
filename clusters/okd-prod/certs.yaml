@@ -36,6 +36,8 @@ kind: Certificate
 metadata:
   name: ingress-certs-public
   namespace: openshift-config # Certificates for Ingress/API must live here
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   secretName: ingress-certs-public
   issuerRef:
@@ -51,6 +53,8 @@ kind: IngressController
 metadata:
   name: default
   namespace: openshift-ingress-operator
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   defaultCertificate:
     name: ingress-certs-public # cert-manager will create this secret
@@ -60,6 +64,8 @@ kind: Certificate
 metadata:
   name: api-certs
   namespace: openshift-config
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   secretName: api-certs-public
   issuerRef:
@@ -73,6 +79,8 @@ apiVersion: config.openshift.io/v1
 kind: APIServer
 metadata:
   name: cluster
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   servingCerts:
     namedCertificates:
