@@ -4,6 +4,8 @@ kind: Deployment
 metadata:
   name: nginx-hello
   namespace: nginx-hello
+  annotations:
+    argocd.argoproj.io/sync-wave: "7"
 spec:
   replicas: 2
   selector:
@@ -29,6 +31,8 @@ kind: Service
 metadata:
   name: nginx-hello-svc
   namespace: nginx-hello
+  annotations:
+    argocd.argoproj.io/sync-wave: "7"
 spec:
   selector:
     app: nginx-hello
@@ -43,6 +47,7 @@ metadata:
   name: nginx-hello-route
   namespace: nginx-hello
   annotations:
+    argocd.argoproj.io/sync-wave: "7"
     # This tells OKD to use the certificate we managed via cert-manager
     # Note: cert-manager can automatically inject certs into routes 
     # if you have the OpenShift route-controller enabled.

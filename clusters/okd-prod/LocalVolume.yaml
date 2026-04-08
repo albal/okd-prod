@@ -3,6 +3,8 @@ kind: LocalVolume
 metadata:
   name: odf-disks
   namespace: openshift-local-storage
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   nodeSelector:
     nodeSelectorTerms:
