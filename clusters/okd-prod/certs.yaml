@@ -25,7 +25,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 spec:
-  channel: stable-v1 # Adjust based on your OKD version's catalog
+  channel: stable-v1  # Adjust based on your OKD version's catalog
   installPlanApproval: Automatic
   name: openshift-cert-manager-operator
   source: redhat-operators
@@ -35,7 +35,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: ingress-certs-public
-  namespace: openshift-config # Certificates for Ingress/API must live here
+  namespace: openshift-config  # Certificates for Ingress/API must live here
   annotations:
     argocd.argoproj.io/sync-wave: "4"
 spec:
@@ -43,10 +43,10 @@ spec:
   issuerRef:
     name: letsencrypt-cloudflare
     kind: ClusterIssuer
-  commonName: "*.apps.okd.dev.tsew.net" # Your wildcard apps domain
+  commonName: "*.apps.okd.dev.tsew.net"  # Your wildcard apps domain
   dnsNames:
-  - "*.apps.okd.dev.tsew.net"
-  - "apps.okd.dev.tsew.net"
+    - "*.apps.okd.dev.tsew.net"
+    - "apps.okd.dev.tsew.net"
 ---
 apiVersion: operator.openshift.io/v1
 kind: IngressController
@@ -57,7 +57,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "4"
 spec:
   defaultCertificate:
-    name: ingress-certs-public # cert-manager will create this secret
+    name: ingress-certs-public  # cert-manager will create this secret
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -73,7 +73,7 @@ spec:
     kind: ClusterIssuer
   commonName: api.okd.dev.tsew.net
   dnsNames:
-  - api.okd.dev.tsew.net
+    - api.okd.dev.tsew.net
 ---
 apiVersion: config.openshift.io/v1
 kind: APIServer
@@ -84,7 +84,7 @@ metadata:
 spec:
   servingCerts:
     namedCertificates:
-    - names:
-      - api.okd.dev.tsew.net
-      servingCertificate:
-        name: api-certs-public
+      - names:
+          - api.okd.dev.tsew.net
+        servingCertificate:
+          name: api-certs-public

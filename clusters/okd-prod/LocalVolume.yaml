@@ -19,7 +19,7 @@ spec:
               - dev-okd-worker1
               - dev-okd-worker2
   storageClassDevices:
-    - storageClassName: "odf-raw-disks" # ODF will look for this name
-      volumeMode: Block # ODF requires Block mode, not Filesystem
+    - storageClassName: "odf-raw-disks"  # ODF will look for this name
+      volumeMode: Block  # ODF requires Block mode, not Filesystem
       devicePaths:
         - /dev/sdb
