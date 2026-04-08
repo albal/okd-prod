@@ -14,7 +14,7 @@ spec:
       - dns01:
           cloudflare:
             apiTokenSecretRef:
-              name: dns-token-secret
+              name: cloudflare-api-token
               key: api-token
 ---
 apiVersion: cert-manager.io/v1
@@ -33,5 +33,5 @@ spec:
       - dns01:
           cloudflare:
             apiTokenSecretRef:
-              name: dns-token-secret
+              name: cloudflare-api-token
               key: api-token
