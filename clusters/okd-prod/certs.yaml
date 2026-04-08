@@ -1,0 +1,49 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ingress-certs-public
+  namespace: openshift-config # Certificates for Ingress/API must live here
+spec:
+  secretName: ingress-certs-public
+  issuerRef:
+    name: letsencrypt-cloudflare
+    kind: ClusterIssuer
+  commonName: "*.apps.okd.dev.tsew.net" # Your wildcard apps domain
+  dnsNames:
+  - "*.apps.okd.dev.tsew.net"
+  - "apps.okd.dev.tsew.net"
+---
+apiVersion: operator.openshift.io/v1
+kind: IngressController
+metadata:
+  name: default
+  namespace: openshift-ingress-operator
+spec:
+  defaultCertificate:
+    name: ingress-certs-public # cert-manager will create this secret
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: api-certs
+  namespace: openshift-config
+spec:
+  secretName: api-certs-public
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: api.okd.dev.tsew.net
+  dnsNames:
+  - api.okd.dev.tsew.net
+  ---
+apiVersion: config.openshift.io/v1
+kind: APIServer
+metadata:
+  name: cluster
+spec:
+  servingCerts:
+    namedCertificates:
+    - names:
+      - api.okd.dev.tsew.net
+      servingCertificate:
+        name: api-certs-public
