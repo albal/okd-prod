@@ -17,14 +17,14 @@ spec:
         app: nginx-hello
     spec:
       containers:
-      - name: nginx
-        image: nginx:alpine
-        ports:
-        - containerPort: 80
-        # Simple hack to make Nginx say Hello World without a custom image
-        command: ["/bin/sh", "-c"]
-        args: 
-          - echo "Hello World from OKD!" > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+          # Simple hack to make Nginx say Hello World without a custom image
+          command: ["/bin/sh", "-c"]
+          args:
+            - echo "Hello World from OKD!" > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'
 ---
 apiVersion: v1
 kind: Service
@@ -37,9 +37,9 @@ spec:
   selector:
     app: nginx-hello
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 80
+    - protocol: TCP
+      port: 80
+      targetPort: 80
 ---
 apiVersion: route.openshift.io/v1
 kind: Route
@@ -49,7 +49,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "7"
     # This tells OKD to use the certificate we managed via cert-manager
-    # Note: cert-manager can automatically inject certs into routes 
+    # Note: cert-manager can automatically inject certs into routes
     # if you have the OpenShift route-controller enabled.
     cert-manager.io/issuer: "letsencrypt-cloudflare"
 spec:

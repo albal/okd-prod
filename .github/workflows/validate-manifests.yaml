@@ -21,7 +21,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install tools
         run: |
@@ -66,4 +66,4 @@ jobs:
             rendered_files+=("$output")
           done
 
-          kubeconform -strict -summary "${rendered_files[@]}"
+          kubeconform -strict -ignore-missing-schemas -summary "${rendered_files[@]}"

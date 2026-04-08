@@ -11,8 +11,8 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-prod-account-key
     solvers:
-    - dns01:
-        cloudflare: # Example for Cloudflare
+      - dns01:
+          cloudflare:  # Example for Cloudflare
           apiTokenSecretRef:
-            name: dns-token-secret # This matches the name inside your SealedSecret
+            name: dns-token-secret  # This matches the name inside your SealedSecret
             key: api-token
