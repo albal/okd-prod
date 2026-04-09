@@ -20,3 +20,4 @@ spec:
       volumeMode: Block  # ODF requires Block mode, not Filesystem
       devicePaths:
         - /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1
+        - /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi2
