@@ -45,14 +45,14 @@ spec:
   monDataDirHostPath: /var/lib/rook
   storageDeviceSets:
     - name: ocs-deviceset
-      count: 1  # Number of disks per node
+      count: 2  # Number of disks per node
       dataPVCTemplate:
         spec:
           accessModes:
             - ReadWriteOnce
           resources:
             requests:
-              storage: 256Gi  # Match your disk size
+              storage: 768Gi  # Match new disk size
           storageClassName: odf-raw-disks
           volumeMode: Block
       replica: 3
