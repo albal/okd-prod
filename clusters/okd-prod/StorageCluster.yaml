@@ -42,6 +42,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "5"
 spec:
   manageNodes: false
+  enableCephTools: true        
   monDataDirHostPath: /var/lib/rook
   storageDeviceSets:
     - name: ocs-deviceset
