@@ -58,4 +58,7 @@ spec:
       replica: 3
       resources: {}
   multiCloudGateway:
-    reconcileStrategy: ignore
+    reconcileStrategy: manage
+  managedResources:
+    cephObjectStores:
+      reconcileStrategy: manage
