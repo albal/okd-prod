@@ -13,3 +13,4 @@ resources:
   - certs.yaml
   - nginx-test.yaml
   - cert-manager-config.yaml
+  - console-plugins.yaml
