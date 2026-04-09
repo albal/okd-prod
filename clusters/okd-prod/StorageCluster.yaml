@@ -27,7 +27,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 spec:
-  channel: stable-4.18 # Adjust to match your OKD major/minor version
+  channel: stable-4.18  # Adjust to match your OKD major/minor version
   installPlanApproval: Automatic
   name: odf-operator
   source: redhat-operators
@@ -42,7 +42,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "5"
 spec:
   manageNodes: false
-  enableCephTools: true        
+  enableCephTools: true
   monDataDirHostPath: /var/lib/rook
   storageDeviceSets:
     - name: ocs-deviceset
