@@ -44,7 +44,7 @@ spec:
           mode: 0644
           overwrite: true
           contents:
-            source: data:text/plain;charset=utf-8;base64,c2VydmVyIDE5Mi4xNjguMC4xMjMgaWJ1cnN0CnNlcnZlciAxOTIuMTY4LjEwLjEyMyBpYnVyc3QKZHJpZnRmaWxlIC92YXIvbGliL2Nocm9ueS9kcmlmdAptYWtlc3RlcCAxLjAgMwpydGNzeW5jCmxvZ2RpciAvdmFyL2xvZy9jaHJvbnkK
+            source: data:text/plain;charset=utf-8,server%20192.168.0.123%20iburst%0Aserver%20192.168.10.123%20iburst%0Adriftfile%20/var/lib/chrony/drift%0Amakestep%201.0%203%0Artcsync%0Alogdir%20/var/log/chrony%0A
 ---
 apiVersion: machineconfiguration.openshift.io/v1
 kind: MachineConfig
@@ -62,4 +62,4 @@ spec:
           mode: 0644
           overwrite: true
           contents:
-            source: data:text/plain;charset=utf-8;base64,c2VydmVyIDE5Mi4xNjguMC4xMjMgaWJ1cnN0CnNlcnZlciAxOTIuMTY4LjEwLjEyMyBpYnVyc3QKZHJpZnRmaWxlIC92YXIvbGliL2Nocm9ueS9kcmlmdAptYWtlc3RlcCAxLjAgMwpydGNzeW5jCmxvZ2RpciAvdmFyL2xvZy9jaHJvbnkK
+            source: data:text/plain;charset=utf-8,server%20192.168.0.123%20iburst%0Aserver%20192.168.10.123%20iburst%0Adriftfile%20/var/lib/chrony/drift%0Amakestep%201.0%203%0Artcsync%0Alogdir%20/var/log/chrony%0A
