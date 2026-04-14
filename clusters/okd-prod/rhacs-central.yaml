@@ -25,3 +25,19 @@ spec:
         requests:
           cpu: 200m
           memory: 4Gi
+---
+apiVersion: console.openshift.io/v1
+kind: ConsolePlugin
+metadata:
+  name: advanced-cluster-security
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  displayName: Red Hat Advanced Cluster Security for OpenShift
+  backend:
+    type: Service
+    service:
+      name: central
+      namespace: stackrox
+      port: 443
+      basePath: /
