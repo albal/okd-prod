@@ -10,4 +10,5 @@ spec:
     - gitops-plugin
     - networking-console-plugin
     - monitoring-plugin
+    - odf-client-console
     - odf-console
