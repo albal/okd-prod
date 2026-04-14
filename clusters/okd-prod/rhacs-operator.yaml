@@ -13,9 +13,7 @@ metadata:
   namespace: rhacs-operator
   annotations:
     argocd.argoproj.io/sync-wave: "1"
-spec:
-  targetNamespaces:
-    - rhacs-operator
+spec: {}
 ---
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
