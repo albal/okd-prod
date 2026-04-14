@@ -20,3 +20,8 @@ spec:
     exposure:
       route:
         enabled: true
+    db:
+      resources:
+        requests:
+          cpu: 200m
+          memory: 4Gi
