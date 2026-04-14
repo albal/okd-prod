@@ -57,7 +57,31 @@ spec:
           storageClassName: odf-raw-disks
           volumeMode: Block
       replica: 3
-      resources: {}
+      resources:
+        requests:
+          cpu: 200m
+          memory: 4Gi
+  resources:
+    mon:
+      requests:
+        cpu: 100m
+        memory: 1Gi
+    mgr:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+    mds:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+    rgw:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+    noobaa-core:
+      requests:
+        cpu: 250m
+        memory: 512Mi
   multiCloudGateway:
     reconcileStrategy: manage
   managedResources:
