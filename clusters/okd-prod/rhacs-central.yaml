@@ -14,7 +14,7 @@ metadata:
   name: stackrox-central-services
   namespace: stackrox
   annotations:
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   central:
     exposure:
