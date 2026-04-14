@@ -13,6 +13,7 @@ This repo tracks Kubernetes/OpenShift manifests for:
 - local storage operator and volumes
 - storage classes and storage cluster configuration
 - cert-manager issuers and certificates
+- Red Hat Advanced Cluster Security operator and central services
 - console plugin configuration
 - machine configuration objects
 

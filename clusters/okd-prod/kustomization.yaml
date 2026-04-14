@@ -12,5 +12,7 @@ resources:
   - ClusterIssuer.yaml
   - certs.yaml
   - cert-manager-config.yaml
+  - rhacs-operator.yaml
+  - rhacs-central.yaml
   - console-plugins.yaml
   - MachineConfigs.yaml
