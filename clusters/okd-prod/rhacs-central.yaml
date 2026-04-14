@@ -26,18 +26,100 @@ spec:
           cpu: 200m
           memory: 4Gi
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: acs-plugin-nginx
+  namespace: stackrox
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+data:
+  nginx.conf: |
+    worker_processes auto;
+    error_log /dev/stderr;
+    pid /tmp/nginx.pid;
+    events { worker_connections 1024; }
+    http {
+      client_body_temp_path /tmp/client_temp;
+      proxy_temp_path /tmp/proxy_temp;
+      fastcgi_temp_path /tmp/fastcgi_temp;
+      uwsgi_temp_path /tmp/uwsgi_temp;
+      scgi_temp_path /tmp/scgi_temp;
+      server {
+        listen 9443 ssl;
+        ssl_certificate /var/serving-cert/tls.crt;
+        ssl_certificate_key /var/serving-cert/tls.key;
+        location / {
+          proxy_pass https://central.stackrox.svc:443;
+          proxy_ssl_verify off;
+        }
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acs-plugin-proxy
+  namespace: stackrox
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: acs-plugin-proxy
+  template:
+    metadata:
+      labels:
+        app: acs-plugin-proxy
+    spec:
+      containers:
+        - name: nginx
+          image: registry.redhat.io/ubi9/nginx-124:latest
+          command: [nginx, -c, /etc/nginx/nginx.conf, -g, "daemon off;"]
+          ports:
+            - containerPort: 9443
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+            - name: serving-cert
+              mountPath: /var/serving-cert
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: acs-plugin-nginx
+        - name: serving-cert
+          secret:
+            secretName: acs-plugin-proxy-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: acs-plugin-proxy
+  namespace: stackrox
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+    service.beta.openshift.io/serving-cert-secret-name: acs-plugin-proxy-tls
+spec:
+  selector:
+    app: acs-plugin-proxy
+  ports:
+    - port: 9443
+      targetPort: 9443
+---
 apiVersion: console.openshift.io/v1
 kind: ConsolePlugin
 metadata:
   name: advanced-cluster-security
   annotations:
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-wave: "6"
 spec:
   displayName: Red Hat Advanced Cluster Security for OpenShift
   backend:
     type: Service
     service:
-      name: central
+      name: acs-plugin-proxy
       namespace: stackrox
-      port: 443
+      port: 9443
       basePath: /
