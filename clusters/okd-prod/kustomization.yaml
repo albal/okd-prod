@@ -14,5 +14,6 @@ resources:
   - cert-manager-config.yaml
   - rhacs-operator.yaml
   - rhacs-central.yaml
+  - rhacs-secured-cluster.yaml
   - console-plugins.yaml
   - MachineConfigs.yaml
