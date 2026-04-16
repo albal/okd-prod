@@ -10,6 +10,7 @@ GitOps repository for the production OKD cluster, managed with Argo CD.
 
 This repo tracks Kubernetes/OpenShift manifests for:
 
+- Red Hat Advanced Cluster Management operator and hub configuration
 - local storage operator and volumes
 - storage classes and storage cluster configuration
 - cert-manager issuers and certificates
