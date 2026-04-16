@@ -82,6 +82,10 @@ spec:
       requests:
         cpu: 250m
         memory: 512Mi
+    noobaa-endpoint:
+      requests:
+        cpu: 250m
+        memory: 256Mi
   multiCloudGateway:
     reconcileStrategy: manage
   managedResources:
