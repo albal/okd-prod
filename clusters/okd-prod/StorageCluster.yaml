@@ -59,7 +59,7 @@ spec:
       replica: 3
       resources:
         requests:
-          cpu: 200m
+          cpu: 100m
           memory: 4Gi
   resources:
     mon:
@@ -68,19 +68,19 @@ spec:
         memory: 1Gi
     mgr:
       requests:
-        cpu: 200m
+        cpu: 100m
         memory: 512Mi
     mds:
       requests:
-        cpu: 200m
+        cpu: 50m
         memory: 512Mi
     rgw:
       requests:
-        cpu: 200m
+        cpu: 50m
         memory: 512Mi
     noobaa-core:
       requests:
-        cpu: 250m
+        cpu: 100m
         memory: 512Mi
     noobaa-endpoint:
       requests:
