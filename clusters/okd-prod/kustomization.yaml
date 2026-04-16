@@ -17,5 +17,6 @@ resources:
   - rhacs-operator.yaml
   - rhacs-central.yaml
   - rhacs-secured-cluster.yaml
+  - aap-operator.yaml
   - console-plugins.yaml
   - MachineConfigs.yaml
