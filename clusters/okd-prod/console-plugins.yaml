@@ -6,10 +6,9 @@ metadata:
     argocd.argoproj.io/sync-wave: "6"
 spec:
   plugins:
-    - advanced-cluster-security
-    - acm-console.openshift.io
+    - acm
     - gitops-plugin
-    - networking-console-plugin
+    - mce
     - monitoring-plugin
-    - odf-client-console
+    - networking-console-plugin
     - odf-console
