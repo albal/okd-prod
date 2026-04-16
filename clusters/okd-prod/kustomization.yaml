@@ -4,6 +4,8 @@ kind: Kustomization
 # Explicitly including everything ensures you don't miss anything
 # and gives you control over the order if necessary.
 resources:
+  - acm-operator.yaml
+  - acm-hub.yaml
   - local-storage-operator.yaml
   - LocalVolumeDiscovery.yaml
   - LocalVolume.yaml
