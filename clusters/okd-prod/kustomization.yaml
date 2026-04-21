@@ -6,6 +6,7 @@ kind: Kustomization
 resources:
   - acm-operator.yaml
   - acm-hub.yaml
+  - baremetal-operator.yaml
   - local-storage-operator.yaml
   - LocalVolumeDiscovery.yaml
   - LocalVolume.yaml
