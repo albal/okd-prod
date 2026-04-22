@@ -20,11 +20,42 @@ spec:
     exposure:
       route:
         enabled: true
+    resources:
+      requests:
+        cpu: 200m
+        memory: 4Gi
     db:
       resources:
         requests:
-          cpu: 200m
+          cpu: 150m
           memory: 4Gi
+  scanner:
+    analyzer:
+      resources:
+        requests:
+          cpu: 200m
+          memory: 1500Mi
+    db:
+      resources:
+        requests:
+          cpu: 150m
+          memory: 200Mi
+  scannerV4:
+    indexer:
+      resources:
+        requests:
+          cpu: 200m
+          memory: 1500Mi
+    matcher:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 1500Mi
+    db:
+      resources:
+        requests:
+          cpu: 150m
+          memory: 200Mi
 ---
 apiVersion: console.openshift.io/v1
 kind: ConsoleLink
