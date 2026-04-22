@@ -3,6 +3,9 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: dell1-secret
+  namespace: r230
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 type: Opaque
 data:
   username: cm9vdA==
@@ -12,12 +15,17 @@ apiVersion: metal3.io/v1alpha1
 kind: BareMetalHost
 metadata:
   name: dell1-r230
-  namespace: openshift-machine-api
+  namespace: r230
+  labels:
+    infraenvs.agent-install.openshift.io: r230
   annotations:
     argocd.argoproj.io/sync-wave: "4"
+    inspect.metal3.io: disabled
+    bmac.agent-install.openshift.io/role: auto-assign
 spec:
   online: true
   bootMACAddress: 50:9A:4C:92:EF:6D
+  automatedCleaningMode: disabled
   bmc:
     address: idrac-virtualmedia://192.168.100.1
     credentialsName: dell1-secret
@@ -27,6 +35,9 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: dell2-secret
+  namespace: r230
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 type: Opaque
 data:
   username: cm9vdA==
@@ -36,12 +47,17 @@ apiVersion: metal3.io/v1alpha1
 kind: BareMetalHost
 metadata:
   name: dell2-r230
-  namespace: openshift-machine-api
+  namespace: r230
+  labels:
+    infraenvs.agent-install.openshift.io: r230
   annotations:
     argocd.argoproj.io/sync-wave: "4"
+    inspect.metal3.io: disabled
+    bmac.agent-install.openshift.io/role: auto-assign
 spec:
   online: true
   bootMACAddress: 50:9A:4C:98:43:38
+  automatedCleaningMode: disabled
   bmc:
     address: idrac-virtualmedia://192.168.100.2
     credentialsName: dell2-secret
@@ -51,6 +67,9 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: dell3-secret
+  namespace: r230
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 type: Opaque
 data:
   username: cm9vdA==
@@ -60,12 +79,17 @@ apiVersion: metal3.io/v1alpha1
 kind: BareMetalHost
 metadata:
   name: dell3-r230
-  namespace: openshift-machine-api
+  namespace: r230
+  labels:
+    infraenvs.agent-install.openshift.io: r230
   annotations:
     argocd.argoproj.io/sync-wave: "4"
+    inspect.metal3.io: disabled
+    bmac.agent-install.openshift.io/role: auto-assign
 spec:
   online: true
   bootMACAddress: 6C:2B:59:7A:5F:92
+  automatedCleaningMode: disabled
   bmc:
     address: idrac-virtualmedia://192.168.100.3
     credentialsName: dell3-secret
@@ -75,6 +99,9 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: dell5-secret
+  namespace: r230
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 type: Opaque
 data:
   username: cm9vdA==
@@ -84,13 +111,18 @@ apiVersion: metal3.io/v1alpha1
 kind: BareMetalHost
 metadata:
   name: dell5-r230
-  namespace: openshift-machine-api
+  namespace: r230
+  labels:
+    infraenvs.agent-install.openshift.io: r230
   annotations:
     argocd.argoproj.io/sync-wave: "4"
+    inspect.metal3.io: disabled
+    bmac.agent-install.openshift.io/role: auto-assign
 spec:
   online: true
   bootMACAddress: 50:9A:4C:97:24:0A
+  automatedCleaningMode: disabled
   bmc:
     address: idrac-virtualmedia://192.168.100.5
-    credentialsName: dell4-secret
+    credentialsName: dell5-secret
     disableCertificateVerification: true
