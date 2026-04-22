@@ -1,0 +1,96 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dell1-secret
+type: Opaque
+data:
+  username: cm9vdA==
+  password: Y2Fsdmlu
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: dell1-r230
+  namespace: openshift-machine-api
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  online: true
+  bootMACAddress: 50:9A:4C:92:EF:6D
+  bmc:
+    address: idrac-virtualmedia://192.168.100.1
+    credentialsName: dell1-secret
+    disableCertificateVerification: true
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dell2-secret
+type: Opaque
+data:
+  username: cm9vdA==
+  password: Y2Fsdmlu
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: dell2-r230
+  namespace: openshift-machine-api
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  online: true
+  bootMACAddress: 50:9A:4C:98:43:38
+  bmc:
+    address: idrac-virtualmedia://192.168.100.2
+    credentialsName: dell2-secret
+    disableCertificateVerification: true
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dell3-secret
+type: Opaque
+data:
+  username: cm9vdA==
+  password: Y2Fsdmlu
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: dell3-r230
+  namespace: openshift-machine-api
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  online: true
+  bootMACAddress: 6C:2B:59:7A:5F:92
+  bmc:
+    address: idrac-virtualmedia://192.168.100.3
+    credentialsName: dell3-secret
+    disableCertificateVerification: true
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dell5-secret
+type: Opaque
+data:
+  username: cm9vdA==
+  password: Y2Fsdmlu
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: dell5-r230
+  namespace: openshift-machine-api
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  online: true
+  bootMACAddress: 50:9A:4C:97:24:0A
+  bmc:
+    address: idrac-virtualmedia://192.168.100.5
+    credentialsName: dell4-secret
+    disableCertificateVerification: true
