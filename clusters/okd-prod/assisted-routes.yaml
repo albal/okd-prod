@@ -1,0 +1,37 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: assisted-image-service
+  namespace: multicluster-engine
+  annotations:
+    haproxy.router.openshift.io/timeout: 30m
+spec:
+  host: assisted-image-service-multicluster-engine.apps.okd.dev.tsew.net
+  port:
+    targetPort: assisted-image-service
+  tls:
+    termination: reencrypt
+  to:
+    kind: Service
+    name: assisted-image-service
+    weight: 100
+  wildcardPolicy: None
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: assisted-service
+  namespace: multicluster-engine
+  annotations:
+    haproxy.router.openshift.io/timeout: 30m
+spec:
+  host: assisted-service-multicluster-engine.apps.okd.dev.tsew.net
+  port:
+    targetPort: assisted-service
+  tls:
+    termination: reencrypt
+  to:
+    kind: Service
+    name: assisted-service
+    weight: 100
+  wildcardPolicy: None

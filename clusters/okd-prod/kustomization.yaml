@@ -21,5 +21,6 @@ resources:
   - rhacs-secured-cluster.yaml
   - aap-operator.yaml
   - agentserviceconfig.yaml
+  - assisted-routes.yaml
   - console-plugins.yaml
   - MachineConfigs.yaml
