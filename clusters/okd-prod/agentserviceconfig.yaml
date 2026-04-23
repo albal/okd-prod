@@ -28,3 +28,8 @@ spec:
       requests:
         storage: 50Gi
     storageClassName: ocs-storagecluster-ceph-rbd
+  osImages:
+    - openshiftVersion: "4.19"
+      version: "4.19.23"
+      url: "https://mirror.openshift.com/pub/openshift-v4/x86_64/dependencies/rhcos/4.19/4.19.23/rhcos-4.19.23-x86_64-live-iso.x86_64.iso"
+      cpuArchitecture: x86_64
