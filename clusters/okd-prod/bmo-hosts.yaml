@@ -26,6 +26,7 @@ spec:
   online: true
   bootMACAddress: 50:9A:4C:92:EF:6D
   automatedCleaningMode: disabled
+  bootMode: legacy
   bmc:
     address: idrac-virtualmedia://192.168.100.1/redfish/v1/Systems/System.Embedded.1
     credentialsName: dell1-secret
@@ -58,6 +59,7 @@ spec:
   online: true
   bootMACAddress: 50:9A:4C:98:43:38
   automatedCleaningMode: disabled
+  bootMode: legacy
   bmc:
     address: idrac-virtualmedia://192.168.100.2/redfish/v1/Systems/System.Embedded.1
     credentialsName: dell2-secret
@@ -90,6 +92,7 @@ spec:
   online: true
   bootMACAddress: 6C:2B:59:7A:5F:92
   automatedCleaningMode: disabled
+  bootMode: legacy
   bmc:
     address: idrac-virtualmedia://192.168.100.3/redfish/v1/Systems/System.Embedded.1
     credentialsName: dell3-secret
@@ -122,6 +125,7 @@ spec:
   online: true
   bootMACAddress: 50:9A:4C:97:24:0A
   automatedCleaningMode: disabled
+  bootMode: legacy
   bmc:
     address: idrac-virtualmedia://192.168.100.5/redfish/v1/Systems/System.Embedded.1
     credentialsName: dell5-secret
