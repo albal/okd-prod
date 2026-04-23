@@ -16,9 +16,6 @@ resources:
   - ClusterIssuer.yaml
   - certs.yaml
   - cert-manager-config.yaml
-  - rhacs-operator.yaml
-  - rhacs-central.yaml
-  - rhacs-secured-cluster.yaml
   - aap-operator.yaml
   - agentserviceconfig.yaml
   - assisted-routes.yaml
