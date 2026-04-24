@@ -16,12 +16,9 @@ kind: BareMetalHost
 metadata:
   name: dell1-r230
   namespace: r230
-  labels:
-    infraenvs.agent-install.openshift.io: r230
   annotations:
     argocd.argoproj.io/sync-wave: "4"
     inspect.metal3.io: disabled
-    bmac.agent-install.openshift.io/role: auto-assign
 spec:
   online: true
   externallyProvisioned: true
@@ -50,12 +47,9 @@ kind: BareMetalHost
 metadata:
   name: dell2-r230
   namespace: r230
-  labels:
-    infraenvs.agent-install.openshift.io: r230
   annotations:
     argocd.argoproj.io/sync-wave: "4"
     inspect.metal3.io: disabled
-    bmac.agent-install.openshift.io/role: auto-assign
 spec:
   online: true
   externallyProvisioned: true
@@ -84,12 +78,9 @@ kind: BareMetalHost
 metadata:
   name: dell3-r230
   namespace: r230
-  labels:
-    infraenvs.agent-install.openshift.io: r230
   annotations:
     argocd.argoproj.io/sync-wave: "4"
     inspect.metal3.io: disabled
-    bmac.agent-install.openshift.io/role: auto-assign
 spec:
   online: true
   externallyProvisioned: true
@@ -118,12 +109,9 @@ kind: BareMetalHost
 metadata:
   name: dell5-r230
   namespace: r230
-  labels:
-    infraenvs.agent-install.openshift.io: r230
   annotations:
     argocd.argoproj.io/sync-wave: "4"
     inspect.metal3.io: disabled
-    bmac.agent-install.openshift.io/role: auto-assign
 spec:
   online: true
   externallyProvisioned: true
