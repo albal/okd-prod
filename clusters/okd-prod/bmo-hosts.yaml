@@ -24,6 +24,7 @@ metadata:
     bmac.agent-install.openshift.io/role: auto-assign
 spec:
   online: true
+  externallyProvisioned: true
   bootMACAddress: 50:9A:4C:92:EF:6D
   automatedCleaningMode: disabled
   bootMode: UEFI
@@ -57,6 +58,7 @@ metadata:
     bmac.agent-install.openshift.io/role: auto-assign
 spec:
   online: true
+  externallyProvisioned: true
   bootMACAddress: 50:9A:4C:98:43:38
   automatedCleaningMode: disabled
   bootMode: UEFI
@@ -90,6 +92,7 @@ metadata:
     bmac.agent-install.openshift.io/role: auto-assign
 spec:
   online: true
+  externallyProvisioned: true
   bootMACAddress: 6C:2B:59:7A:5F:92
   automatedCleaningMode: disabled
   bootMode: UEFI
@@ -123,6 +126,7 @@ metadata:
     bmac.agent-install.openshift.io/role: auto-assign
 spec:
   online: true
+  externallyProvisioned: true
   bootMACAddress: 50:9A:4C:97:24:0A
   automatedCleaningMode: disabled
   bootMode: UEFI
