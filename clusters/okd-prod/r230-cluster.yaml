@@ -1,0 +1,76 @@
+---
+apiVersion: hive.openshift.io/v1
+kind: ClusterDeployment
+metadata:
+  name: r230
+  namespace: r230
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  labels:
+    cluster.open-cluster-management.io/clusterset: default
+    hive.openshift.io/cluster-platform: agent-baremetal
+spec:
+  baseDomain: lab.tsew.net
+  clusterInstallRef:
+    group: extensions.hive.openshift.io
+    kind: AgentClusterInstall
+    name: r230
+    version: v1beta1
+  clusterName: r230
+  controlPlaneConfig:
+    servingCertificates: {}
+  installed: false
+  platform:
+    agentBareMetal:
+      agentSelector:
+        matchLabels:
+          agentBareMetal-generated-infraenv-ai-flow: r230
+  pullSecretRef:
+    name: pullsecret-cluster-r230
+---
+apiVersion: extensions.hive.openshift.io/v1beta1
+kind: AgentClusterInstall
+metadata:
+  name: r230
+  namespace: r230
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  clusterDeploymentRef:
+    name: r230
+  holdInstallation: true
+  imageSetRef:
+    name: img4.19.28-x86-64-appsub
+  networking:
+    clusterNetwork:
+      - cidr: 10.128.0.0/14
+        hostPrefix: 23
+    networkType: OVNKubernetes
+    serviceNetwork:
+      - 172.30.0.0/16
+    userManagedNetworking: false
+  provisionRequirements:
+    controlPlaneAgents: 3
+---
+apiVersion: agent-install.openshift.io/v1beta1
+kind: InfraEnv
+metadata:
+  name: r230
+  namespace: r230
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  agentLabels:
+    agentBareMetal-generated-infraenv-ai-flow: r230
+  clusterRef:
+    name: r230
+    namespace: r230
+  cpuArchitecture: x86_64
+  imageType: minimal-iso
+  ipxeScriptType: DiscoveryImageAlways
+  nmStateConfigLabelSelector:
+    matchLabels:
+      infraenvs.agent-install.openshift.io: r230
+  pullSecretRef:
+    name: pullsecret-cluster-r230
+  sshAuthorizedKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCg0G1W6fUNC4B8EACAmL2OraPwn83VKsKlmwSBqOfnzTMRzZtlhXachicGC3hLkx84NOuWeWgP3VXs84YiKwQXhLUxw6XkKAgKyNmHaYX6RiVAomkqq4wdM+iCE4TVT6vHp0GdGBKZzWmFFW4KN9BEZAbL97eUvUFSJagi5itxKkIPv5oO0aXgKQf5A63n3D4HM1I/HZQsVo3SV8Jn/MxfnCxGo62aQGqrIP6bARW6c5SD6zbdXcAM+ZatnLX/F6x0tRal8M2gBokYWI7/gTx0Oh6jmd1GRNwkGXbIXj+7EidFvekIPBSmRYmmr94tHRmTxG8YqZwBJdw84ssDInYQylTFhwa1k1KCD3I777BA9y6df3pHZAl1SCLM5sirPXE8rtbXU4ZHkVsamaSwNHTV6Jfl1nLS628wpMN5021THF45GjS/mMEoMTEGOkj5g6zXvt/4rpbZNs9qaV39qTmoQ6rzY2G4B2rfYXHEnmuAHpBfYEg5YcvFUrcCBWPo1bc= al@CORSAIRONE

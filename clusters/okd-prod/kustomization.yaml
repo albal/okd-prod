@@ -8,6 +8,7 @@ resources:
   - acm-hub.yaml
   - baremetal-operator.yaml
   - bmo-hosts.yaml
+  - r230-cluster.yaml
   - local-storage-operator.yaml
   - LocalVolumeDiscovery.yaml
   - LocalVolume.yaml
