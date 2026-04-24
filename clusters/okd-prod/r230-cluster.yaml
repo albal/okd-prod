@@ -81,3 +81,139 @@ spec:
   pullSecretRef:
     name: pullsecret-cluster-r230
   sshAuthorizedKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCg0G1W6fUNC4B8EACAmL2OraPwn83VKsKlmwSBqOfnzTMRzZtlhXachicGC3hLkx84NOuWeWgP3VXs84YiKwQXhLUxw6XkKAgKyNmHaYX6RiVAomkqq4wdM+iCE4TVT6vHp0GdGBKZzWmFFW4KN9BEZAbL97eUvUFSJagi5itxKkIPv5oO0aXgKQf5A63n3D4HM1I/HZQsVo3SV8Jn/MxfnCxGo62aQGqrIP6bARW6c5SD6zbdXcAM+ZatnLX/F6x0tRal8M2gBokYWI7/gTx0Oh6jmd1GRNwkGXbIXj+7EidFvekIPBSmRYmmr94tHRmTxG8YqZwBJdw84ssDInYQylTFhwa1k1KCD3I777BA9y6df3pHZAl1SCLM5sirPXE8rtbXU4ZHkVsamaSwNHTV6Jfl1nLS628wpMN5021THF45GjS/mMEoMTEGOkj5g6zXvt/4rpbZNs9qaV39qTmoQ6rzY2G4B2rfYXHEnmuAHpBfYEg5YcvFUrcCBWPo1bc= al@CORSAIRONE
+---
+apiVersion: agent-install.openshift.io/v1beta1
+kind: NMStateConfig
+metadata:
+  name: dell1-r230
+  namespace: r230
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  labels:
+    infraenvs.agent-install.openshift.io: r230
+spec:
+  config:
+    interfaces:
+      - name: eno1
+        type: ethernet
+        state: up
+        ipv4:
+          enabled: true
+          dhcp: false
+          address:
+            - ip: 192.168.101.11
+              prefix-length: 24
+    dns-resolver:
+      config:
+        server:
+          - 192.168.101.254
+    routes:
+      config:
+        - destination: 0.0.0.0/0
+          next-hop-address: 192.168.101.254
+          next-hop-interface: eno1
+  interfaces:
+    - name: eno1
+      macAddress: 50:9A:4C:92:EF:6D
+---
+apiVersion: agent-install.openshift.io/v1beta1
+kind: NMStateConfig
+metadata:
+  name: dell2-r230
+  namespace: r230
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  labels:
+    infraenvs.agent-install.openshift.io: r230
+spec:
+  config:
+    interfaces:
+      - name: eno1
+        type: ethernet
+        state: up
+        ipv4:
+          enabled: true
+          dhcp: false
+          address:
+            - ip: 192.168.101.12
+              prefix-length: 24
+    dns-resolver:
+      config:
+        server:
+          - 192.168.101.254
+    routes:
+      config:
+        - destination: 0.0.0.0/0
+          next-hop-address: 192.168.101.254
+          next-hop-interface: eno1
+  interfaces:
+    - name: eno1
+      macAddress: 50:9A:4C:98:43:38
+---
+apiVersion: agent-install.openshift.io/v1beta1
+kind: NMStateConfig
+metadata:
+  name: dell3-r230
+  namespace: r230
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  labels:
+    infraenvs.agent-install.openshift.io: r230
+spec:
+  config:
+    interfaces:
+      - name: eno1
+        type: ethernet
+        state: up
+        ipv4:
+          enabled: true
+          dhcp: false
+          address:
+            - ip: 192.168.101.13
+              prefix-length: 24
+    dns-resolver:
+      config:
+        server:
+          - 192.168.101.254
+    routes:
+      config:
+        - destination: 0.0.0.0/0
+          next-hop-address: 192.168.101.254
+          next-hop-interface: eno1
+  interfaces:
+    - name: eno1
+      macAddress: 6C:2B:59:7A:5F:92
+---
+apiVersion: agent-install.openshift.io/v1beta1
+kind: NMStateConfig
+metadata:
+  name: dell5-r230
+  namespace: r230
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  labels:
+    infraenvs.agent-install.openshift.io: r230
+spec:
+  config:
+    interfaces:
+      - name: eno1
+        type: ethernet
+        state: up
+        ipv4:
+          enabled: true
+          dhcp: false
+          address:
+            - ip: 192.168.101.15
+              prefix-length: 24
+    dns-resolver:
+      config:
+        server:
+          - 192.168.101.254
+    routes:
+      config:
+        - destination: 0.0.0.0/0
+          next-hop-address: 192.168.101.254
+          next-hop-interface: eno1
+  interfaces:
+    - name: eno1
+      macAddress: 50:9A:4C:97:24:0A
