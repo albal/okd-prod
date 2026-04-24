@@ -1,11 +1,4 @@
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: r230
-  annotations:
-    argocd.argoproj.io/sync-wave: "4"
----
 apiVersion: hive.openshift.io/v1
 kind: ClusterDeployment
 metadata:
