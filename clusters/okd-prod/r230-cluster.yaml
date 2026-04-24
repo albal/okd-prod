@@ -38,19 +38,26 @@ metadata:
 spec:
   clusterDeploymentRef:
     name: r230
-  holdInstallation: true
+  holdInstallation: false
   imageSetRef:
     name: img4.19.28-x86-64-appsub
+  apiVIPs:
+    - 192.168.101.10
+  ingressVIPs:
+    - 192.168.101.20
   networking:
     clusterNetwork:
       - cidr: 10.128.0.0/14
         hostPrefix: 23
-    networkType: OVNKubernetes
     serviceNetwork:
       - 172.30.0.0/16
+    machineNetwork:
+      - cidr: 192.168.101.0/24
+    networkType: OVNKubernetes
     userManagedNetworking: false
   provisionRequirements:
     controlPlaneAgents: 3
+    workerAgents: 1
 ---
 apiVersion: agent-install.openshift.io/v1beta1
 kind: InfraEnv
