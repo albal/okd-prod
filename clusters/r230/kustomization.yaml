@@ -8,6 +8,7 @@ resources:
   - LocalVolume.yaml
   - StorageCluster.yaml
   - StorageClass.yaml
+  - cert-manager-operator.yaml
   - ClusterIssuer.yaml
   - certs.yaml
   - cert-manager-config.yaml
