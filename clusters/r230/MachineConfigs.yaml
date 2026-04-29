@@ -46,7 +46,7 @@ spec:
       version: 3.2.0
     systemd:
       units:
-      - contents: |
+        - contents: |
           [Unit]
           Description=Setup Ceph Loop Device
           After=network-online.target
@@ -58,4 +58,3 @@ spec:
           WantedBy=multi-user.target
         enabled: true
         name: setup-ceph-loop.service
-
