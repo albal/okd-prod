@@ -53,7 +53,7 @@ spec:
             ConditionPathExists=/var/lib/ceph-disk.img
             [Service]
             Type=oneshot
-            ExecStart=/bin/bash -c 'L=$(/usr/sbin/losetup --find --show /var/lib/ceph-disk.img); mkdir -p /dev/disk/by-id; ln -sf "$L" /dev/disk/by-id/local-ceph-loop'
+            ExecStart=/bin/bash -c 'L=$(/usr/sbin/losetup --find --show /var/lib/ceph-disk.img); SZ=$(/usr/sbin/blockdev --getsz "$L"); echo "0 $SZ linear $L 0" | /usr/sbin/dmsetup create ceph-disk; mkdir -p /dev/disk/by-id; ln -sf /dev/mapper/ceph-disk /dev/disk/by-id/local-ceph-loop'
             RemainAfterExit=yes
             [Install]
             WantedBy=multi-user.target
