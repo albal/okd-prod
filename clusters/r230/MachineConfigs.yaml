@@ -47,14 +47,14 @@ spec:
     systemd:
       units:
         - contents: |
-          [Unit]
-          Description=Setup Ceph Loop Device
-          After=network-online.target
-          [Service]
-          Type=oneshot
-          ExecStart=/usr/bin/losetup /dev/loop0 /var/lib/ceph-disk.img
-          RemainAfterExit=yes
-          [Install]
-          WantedBy=multi-user.target
-        enabled: true
-        name: setup-ceph-loop.service
+            [Unit]
+            Description=Setup Ceph Loop Device
+            After=network-online.target
+            [Service]
+            Type=oneshot
+            ExecStart=/usr/bin/losetup /dev/loop0 /var/lib/ceph-disk.img
+            RemainAfterExit=yes
+            [Install]
+            WantedBy=multi-user.target
+          enabled: true
+          name: setup-ceph-loop.service
