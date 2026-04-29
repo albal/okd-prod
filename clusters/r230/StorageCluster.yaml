@@ -47,7 +47,7 @@ spec:
   monDataDirHostPath: /var/lib/rook
   storageDeviceSets:
     - name: ocs-deviceset
-      count: 2  # Number of disks per node
+      count: 1  # Number of disks per node (one loop device per master)
       dataPVCTemplate:
         spec:
           accessModes:
