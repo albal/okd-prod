@@ -20,4 +20,4 @@ spec:
     - storageClassName: "odf-raw-disks"  # ODF will look for this name
       volumeMode: Block  # ODF requires Block mode, not Filesystem
       devicePaths:
-        - /dev/loop0
+        - /dev/disk/by-id/local-ceph-loop

@@ -38,8 +38,8 @@ apiVersion: machineconfiguration.openshift.io/v1
 kind: MachineConfig
 metadata:
   labels:
-    machineconfiguration.openshift.io/role: worker
-  name: 99-worker-ceploop
+    machineconfiguration.openshift.io/role: master
+  name: 99-master-ceploop
 spec:
   config:
     ignition:
@@ -49,10 +49,11 @@ spec:
         - contents: |
             [Unit]
             Description=Setup Ceph Loop Device
-            After=network-online.target
+            After=network-online.target local-fs.target
+            ConditionPathExists=/var/lib/ceph-disk.img
             [Service]
             Type=oneshot
-            ExecStart=/usr/bin/losetup /dev/loop0 /var/lib/ceph-disk.img
+            ExecStart=/bin/bash -c 'L=$(/usr/sbin/losetup --find --show /var/lib/ceph-disk.img); mkdir -p /dev/disk/by-id; ln -sf "$L" /dev/disk/by-id/local-ceph-loop'
             RemainAfterExit=yes
             [Install]
             WantedBy=multi-user.target
