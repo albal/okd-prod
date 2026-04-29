@@ -56,5 +56,5 @@ spec:
             RemainAfterExit=yes
             [Install]
             WantedBy=multi-user.target
-        enabled: true
-        name: setup-ceph-loop.service
+          enabled: true
+          name: setup-ceph-loop.service
