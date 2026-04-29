@@ -1,0 +1,93 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openshift-storage
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  labels:
+    openshift.io/cluster-monitoring: "true"
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: openshift-storage-operatorgroup
+  namespace: openshift-storage
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  targetNamespaces:
+    - openshift-storage
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: odf-operator
+  namespace: openshift-storage
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  channel: stable-4.18  # Adjust to match your OKD major/minor version
+  installPlanApproval: Automatic
+  name: odf-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+---
+apiVersion: ocs.openshift.io/v1
+kind: StorageCluster
+metadata:
+  name: ocs-storagecluster
+  namespace: openshift-storage
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  manageNodes: false
+  enableCephTools: true
+  monDataDirHostPath: /var/lib/rook
+  storageDeviceSets:
+    - name: ocs-deviceset
+      count: 2  # Number of disks per node
+      dataPVCTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 500Gi  # Match new disk size
+          storageClassName: odf-raw-disks
+          volumeMode: Block
+      replica: 3
+      resources:
+        requests:
+          cpu: 100m
+          memory: 4Gi
+  resources:
+    mon:
+      requests:
+        cpu: 100m
+        memory: 1Gi
+    mgr:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+    mds:
+      requests:
+        cpu: 50m
+        memory: 512Mi
+    rgw:
+      requests:
+        cpu: 50m
+        memory: 512Mi
+    noobaa-core:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+    noobaa-endpoint:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+  multiCloudGateway:
+    reconcileStrategy: manage
+  managedResources:
+    cephObjectStores:
+      reconcileStrategy: manage

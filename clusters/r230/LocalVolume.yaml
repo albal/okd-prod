@@ -1,0 +1,22 @@
+apiVersion: local.storage.openshift.io/v1
+kind: LocalVolume
+metadata:
+  name: odf-disks
+  namespace: openshift-local-storage
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  nodeSelector:
+    nodeSelectorTerms:
+      - matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+              - dell1
+              - dell2
+              - dell3
+  storageClassDevices:
+    - storageClassName: "odf-raw-disks"  # ODF will look for this name
+      volumeMode: Block  # ODF requires Block mode, not Filesystem
+      devicePaths:
+        - /dev/loop0

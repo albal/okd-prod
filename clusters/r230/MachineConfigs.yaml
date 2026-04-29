@@ -1,0 +1,61 @@
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: worker
+  name: 99-worker-ntp-servers
+spec:
+  config:
+    ignition:
+      version: 3.2.0
+    storage:
+      files:
+        - path: /etc/chrony.conf
+          mode: 0644
+          overwrite: true
+          contents:
+            source: data:text/plain;charset=utf-8,server%200.uk.pool.ntp.org%20iburst%0Aserver%201.uk.pool.ntp.org%20iburst%0Aserver%202.uk.pool.ntp.org%20iburst%0Aserver%20192.168.0.123%20iburst%0Adriftfile%20/var/lib/chrony/drift%0Amakestep%201.0%203%0Artcsync%0Alogdir%20/var/log/chrony%0A
+---
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: master
+  name: 99-master-ntp-servers
+spec:
+  config:
+    ignition:
+      version: 3.2.0
+    storage:
+      files:
+        - path: /etc/chrony.conf
+          mode: 0644
+          overwrite: true
+          contents:
+            source: data:text/plain;charset=utf-8,server%200.uk.pool.ntp.org%20iburst%0Aserver%201.uk.pool.ntp.org%20iburst%0Aserver%202.uk.pool.ntp.org%20iburst%0Aserver%20192.168.0.123%20iburst%0Adriftfile%20/var/lib/chrony/drift%0Amakestep%201.0%203%0Artcsync%0Alogdir%20/var/log/chrony%0A
+---
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: worker
+  name: 99-worker-ceploop
+spec:
+  config:
+    ignition:
+      version: 3.2.0
+    systemd:
+      units:
+      - contents: |
+          [Unit]
+          Description=Setup Ceph Loop Device
+          After=network-online.target
+          [Service]
+          Type=oneshot
+          ExecStart=/usr/bin/losetup /dev/loop0 /var/lib/ceph-disk.img
+          RemainAfterExit=yes
+          [Install]
+          WantedBy=multi-user.target
+        enabled: true
+        name: setup-ceph-loop.service
+

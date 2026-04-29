@@ -1,0 +1,13 @@
+apiVersion: operator.openshift.io/v1
+kind: Console
+metadata:
+  name: cluster
+  annotations:
+    argocd.argoproj.io/sync-wave: "6"
+spec:
+  plugins:
+    - gitops-plugin
+    - mce
+    - monitoring-plugin
+    - networking-console-plugin
+    - odf-console
