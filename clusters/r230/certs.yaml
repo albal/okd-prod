@@ -5,6 +5,7 @@ metadata:
   namespace: openshift-ingress
   annotations:
     argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   secretName: ingress-certs-public
   issuerRef:
@@ -33,6 +34,7 @@ metadata:
   namespace: openshift-config
   annotations:
     argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   secretName: api-certs-public
   issuerRef:
