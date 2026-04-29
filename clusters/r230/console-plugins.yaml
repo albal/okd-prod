@@ -7,7 +7,6 @@ metadata:
 spec:
   plugins:
     - gitops-plugin
-    - mce
     - monitoring-plugin
     - networking-console-plugin
     - odf-console
