@@ -59,3 +59,29 @@ spec:
             WantedBy=multi-user.target
           enabled: true
           name: setup-ceph-loop.service
+---
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  name: 99-mitigate-cve-2026-31431-master
+  labels:
+    machineconfiguration.openshift.io/role: master
+spec:
+  config:
+    ignition:
+      version: 3.2.0
+  kernelArguments:
+    - initcall_blacklist=algif_aead_init
+---
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  name: 99-mitigate-cve-2026-31431-worker
+  labels:
+    machineconfiguration.openshift.io/role: worker
+spec:
+  config:
+    ignition:
+      version: 3.2.0
+  kernelArguments:
+    - initcall_blacklist=algif_aead_init
