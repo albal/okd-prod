@@ -1,0 +1,47 @@
+# Authorized SSH keys for the `core` user on every node.
+# Source: https://github.com/albal.keys (fetched 2026-08-15)
+# Refresh with:
+#   curl -sS https://github.com/albal.keys | awk '{print "            - "$1" "$2}'
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: master
+  name: 99-master-ssh-albal
+spec:
+  config:
+    ignition:
+      version: 3.2.0
+    passwd:
+      users:
+        - name: core
+          sshAuthorizedKeys:
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCg0G1W6fUNC4B8EACAmL2OraPwn83VKsKlmwSBqOfnzTMRzZtlhXachicGC3hLkx84NOuWeWgP3VXs84YiKwQXhLUxw6XkKAgKyNmHaYX6RiVAomkqq4wdM+iCE4TVT6vHp0GdGBKZzWmFFW4KN9BEZAbL97eUvUFSJagi5itxKkIPv5oO0aXgKQf5A63n3D4HM1I/HZQsVo3SV8Jn/MxfnCxGo62aQGqrIP6bARW6c5SD6zbdXcAM+ZatnLX/F6x0tRal8M2gBokYWI7/gTx0Oh6jmd1GRNwkGXbIXj+7EidFvekIPBSmRYmmr94tHRmTxG8YqZwBJdw84ssDInYQylTFhwa1k1KCD3I777BA9y6df3pHZAl1SCLM5sirPXE8rtbXU4ZHkVsamaSwNHTV6Jfl1nLS628wpMN5021THF45GjS/mMEoMTEGOkj5g6zXvt/4rpbZNs9qaV39qTmoQ6rzY2G4B2rfYXHEnmuAHpBfYEg5YcvFUrcCBWPo1bc=
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQD31FpH88gFmNqn58DvhR23fwoGS+ILKejI4oLQSrKBHB4wlPOsGudc+FqcGMXizgWn/6gbt6GHvfHUUVwLauVz1dHwUwaiq0G9lBf4iJSrIqGapjoWBb6EQE8c47NiHfrh2Rz+hvSk2MIzpOlEDAXc/645wFH4uHUls3krCJMnDJnAurkm9zmuzRWLvE4IgxOhcra0SnAqrPmi0NVqM+4SlWfsiOULrhHUCk/XkPUZCRFbnf8bfO/y7Amfoc+wYPuIaAaG9B8SjvHHA+p1/qAwWYe71GN0YYCzCZ9e8gxfKQjpuP5f7J4LTK1DQq6ndULvE3ntr/Gvvr2ugShzWGUknsiGFJPrf5+D2f5M9+btV7jKNjpDFlXWTod5in2eeqe8S+K/1XyDvRMZqggoxxvFTQ8ZExb2pSxR1Zw62FSO2Pmqp4monRUrxc1Opkz6zWw8laPKXHwQMZiEMliF1RBlR/JXW+HeLxTTijz0drLCaq0Zwu+ISBeiSzrhVU2XBfE=
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj11Ey6KuYLMOBWWn+KxSZDYZY3+ffu4/jcBalnlmKAhFDrAK6WIgY43cZr4tcTvkM2RQPx4wp8Fw/8xdnVMGjcUibkh3D3Kn0BO6/dppluVGV3towDCGIR7nq4DudWyxCFg2QVJg/NK/yQWBnK0gXTUOQ7kSlHfBXOdznIGOEvz8U8EG8eN0at6+MjsPZCBKDUDHjE2nTztte84AS8QXXzGek74shXceNYqMzBduxURT3FLQeCP7Br2CwUvIOuZfICSp95bOH9eH71e/iZvvXNnngqP3+Jacm/j3uuHiaLGtIt5jVxD4POU3+fhcCYqG/keTpgy8jaDWE9vnf58kiYNNlY3Uf0GCrH5QZLkmzflhaq2uCxQZoiwKD+35i2WRYVdU2DoDX1kLuRhhiLB5E7Nn4vUnUUMEsDtmR5Jj/H+RSJC+/atGcLqnMfFcpFwvXxdIzaZ7qYJnpebVctBAgVMWY8pQSBjs01i69pcK8MYjnYLYKqTMcWyEd2WgMkqs=
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCG46btJ3dm2CoaUR9Sm7z58M/EYj60vrjoXUm4ko4sHhKaqwqkTtwsQ9w8gGqbWHNZpur4CGhQqPUh6nDL9owB4RHo/QUEZqIpENg4PvqkGgYhUkCIsitciiCrObIcWetRYuDugjseVXGRLBCXK+UwqGtmkue5v5KCwj5kPbpl0WeXnqC1f8kDyzmZx6hGyeQ5vn+lLCn1Z9R/OI3Z/FWutRTR16Go6bLHcNxKVfa0Lf9X8Fm/ZKbGoIejJewVx/K71KcMfVAb0TRipjRRejikJ3C4bVv02CvuHSE2YZFPhhldU6a0Bnkvak8m5wi55OJprb/kZcDpGj86DYCxCX5g/y9aM1COac/UbZ5esq6YJAO7pk9uRzkriQdNea8Kl45bwfGHVDpgfM2uil1dP3Lo09yC/cNPpc5MaMnRTMJ+GS+ZZCF0/3a69ScQBubBm9oJyyT1CjkWGJty+L9wSVaMhEdBdiwN9K9ERzWdAudX76gBw58kpXTkUPWTOjyPN3s=
+            - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIWotXS85lArDMh2G+Is+/dSvLGZpzRu9xx8VH70HR5N
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCPdXvz5O2nZaC7fSWMqBCT759hbPtPSLHa4RVnQjM/MeQxY56sjF3FCNDr2K5SbPB5jwwQcMNED4VCW/23Iu6ivTDZnTOs7A8mdx/xG75PgyIg94mwe0rW5pn15RAbxV0oXEpzbeZ1bMGOuAG55a1GxXHwKMUI3DcTsskqq4rJWafPqbmrAztZtp1njg9CNTLAILsKVeu6D8LaKxMs1P6JW2pOYezhcZtsMSmDrlrA1yEMHLZ7lsj5szx7+8jXV82kEWbLspL1db6Zknd03d8yNfqyDshr7ghONRtf0zt5SfgKSjSjOu8loxmHX75eQzFQfLkJvt4qvs04hW2lKpFfnngpwVgvg3LhiB4/kYFZ/9XNn8AVyDsvOEP5Ct71wR/3HNm7yuhvCgZKEzxqirYmzX1Nf28Elvk5fuQYhI9CxJa96nrBGhTu6AYe597nVsJgQjtyzcuFueAeYod98zqGCQ4V4w7kkyo2XIWtQXSAmxUwh47WiTVqF0Tk5/J1Gq8=
+            - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII5pwzYZanBSGxVQ4tOodBX7Mrn1YP+bgyPje8Qc4mZS
+---
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: worker
+  name: 99-worker-ssh-albal
+spec:
+  config:
+    ignition:
+      version: 3.2.0
+    passwd:
+      users:
+        - name: core
+          sshAuthorizedKeys:
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCg0G1W6fUNC4B8EACAmL2OraPwn83VKsKlmwSBqOfnzTMRzZtlhXachicGC3hLkx84NOuWeWgP3VXs84YiKwQXhLUxw6XkKAgKyNmHaYX6RiVAomkqq4wdM+iCE4TVT6vHp0GdGBKZzWmFFW4KN9BEZAbL97eUvUFSJagi5itxKkIPv5oO0aXgKQf5A63n3D4HM1I/HZQsVo3SV8Jn/MxfnCxGo62aQGqrIP6bARW6c5SD6zbdXcAM+ZatnLX/F6x0tRal8M2gBokYWI7/gTx0Oh6jmd1GRNwkGXbIXj+7EidFvekIPBSmRYmmr94tHRmTxG8YqZwBJdw84ssDInYQylTFhwa1k1KCD3I777BA9y6df3pHZAl1SCLM5sirPXE8rtbXU4ZHkVsamaSwNHTV6Jfl1nLS628wpMN5021THF45GjS/mMEoMTEGOkj5g6zXvt/4rpbZNs9qaV39qTmoQ6rzY2G4B2rfYXHEnmuAHpBfYEg5YcvFUrcCBWPo1bc=
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQD31FpH88gFmNqn58DvhR23fwoGS+ILKejI4oLQSrKBHB4wlPOsGudc+FqcGMXizgWn/6gbt6GHvfHUUVwLauVz1dHwUwaiq0G9lBf4iJSrIqGapjoWBb6EQE8c47NiHfrh2Rz+hvSk2MIzpOlEDAXc/645wFH4uHUls3krCJMnDJnAurkm9zmuzRWLvE4IgxOhcra0SnAqrPmi0NVqM+4SlWfsiOULrhHUCk/XkPUZCRFbnf8bfO/y7Amfoc+wYPuIaAaG9B8SjvHHA+p1/qAwWYe71GN0YYCzCZ9e8gxfKQjpuP5f7J4LTK1DQq6ndULvE3ntr/Gvvr2ugShzWGUknsiGFJPrf5+D2f5M9+btV7jKNjpDFlXWTod5in2eeqe8S+K/1XyDvRMZqggoxxvFTQ8ZExb2pSxR1Zw62FSO2Pmqp4monRUrxc1Opkz6zWw8laPKXHwQMZiEMliF1RBlR/JXW+HeLxTTijz0drLCaq0Zwu+ISBeiSzrhVU2XBfE=
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj11Ey6KuYLMOBWWn+KxSZDYZY3+ffu4/jcBalnlmKAhFDrAK6WIgY43cZr4tcTvkM2RQPx4wp8Fw/8xdnVMGjcUibkh3D3Kn0BO6/dppluVGV3towDCGIR7nq4DudWyxCFg2QVJg/NK/yQWBnK0gXTUOQ7kSlHfBXOdznIGOEvz8U8EG8eN0at6+MjsPZCBKDUDHjE2nTztte84AS8QXXzGek74shXceNYqMzBduxURT3FLQeCP7Br2CwUvIOuZfICSp95bOH9eH71e/iZvvXNnngqP3+Jacm/j3uuHiaLGtIt5jVxD4POU3+fhcCYqG/keTpgy8jaDWE9vnf58kiYNNlY3Uf0GCrH5QZLkmzflhaq2uCxQZoiwKD+35i2WRYVdU2DoDX1kLuRhhiLB5E7Nn4vUnUUMEsDtmR5Jj/H+RSJC+/atGcLqnMfFcpFwvXxdIzaZ7qYJnpebVctBAgVMWY8pQSBjs01i69pcK8MYjnYLYKqTMcWyEd2WgMkqs=
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCG46btJ3dm2CoaUR9Sm7z58M/EYj60vrjoXUm4ko4sHhKaqwqkTtwsQ9w8gGqbWHNZpur4CGhQqPUh6nDL9owB4RHo/QUEZqIpENg4PvqkGgYhUkCIsitciiCrObIcWetRYuDugjseVXGRLBCXK+UwqGtmkue5v5KCwj5kPbpl0WeXnqC1f8kDyzmZx6hGyeQ5vn+lLCn1Z9R/OI3Z/FWutRTR16Go6bLHcNxKVfa0Lf9X8Fm/ZKbGoIejJewVx/K71KcMfVAb0TRipjRRejikJ3C4bVv02CvuHSE2YZFPhhldU6a0Bnkvak8m5wi55OJprb/kZcDpGj86DYCxCX5g/y9aM1COac/UbZ5esq6YJAO7pk9uRzkriQdNea8Kl45bwfGHVDpgfM2uil1dP3Lo09yC/cNPpc5MaMnRTMJ+GS+ZZCF0/3a69ScQBubBm9oJyyT1CjkWGJty+L9wSVaMhEdBdiwN9K9ERzWdAudX76gBw58kpXTkUPWTOjyPN3s=
+            - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIWotXS85lArDMh2G+Is+/dSvLGZpzRu9xx8VH70HR5N
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCPdXvz5O2nZaC7fSWMqBCT759hbPtPSLHa4RVnQjM/MeQxY56sjF3FCNDr2K5SbPB5jwwQcMNED4VCW/23Iu6ivTDZnTOs7A8mdx/xG75PgyIg94mwe0rW5pn15RAbxV0oXEpzbeZ1bMGOuAG55a1GxXHwKMUI3DcTsskqq4rJWafPqbmrAztZtp1njg9CNTLAILsKVeu6D8LaKxMs1P6JW2pOYezhcZtsMSmDrlrA1yEMHLZ7lsj5szx7+8jXV82kEWbLspL1db6Zknd03d8yNfqyDshr7ghONRtf0zt5SfgKSjSjOu8loxmHX75eQzFQfLkJvt4qvs04hW2lKpFfnngpwVgvg3LhiB4/kYFZ/9XNn8AVyDsvOEP5Ct71wR/3HNm7yuhvCgZKEzxqirYmzX1Nf28Elvk5fuQYhI9CxJa96nrBGhTu6AYe597nVsJgQjtyzcuFueAeYod98zqGCQ4V4w7kkyo2XIWtQXSAmxUwh47WiTVqF0Tk5/J1Gq8=
+            - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII5pwzYZanBSGxVQ4tOodBX7Mrn1YP+bgyPje8Qc4mZS
