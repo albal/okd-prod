@@ -91,8 +91,10 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 10
           livenessProbe:
+            # Must NOT be "/": nginx has no index file here and returns 403 for
+            # a directory listing, which fails the probe and crash-loops the pod.
             httpGet:
-              path: /
+              path: /coreos-x86_64.iso
               port: 8080
             initialDelaySeconds: 15
             periodSeconds: 30
