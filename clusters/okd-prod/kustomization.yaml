@@ -9,6 +9,7 @@ resources:
   - baremetal-operator.yaml
   - bmo-hosts.yaml
   - r230-cluster.yaml
+  - soup-cluster.yaml
   - local-storage-operator.yaml
   - LocalVolumeDiscovery.yaml
   - LocalVolume.yaml
@@ -18,6 +19,7 @@ resources:
   - certs.yaml
   - cert-manager-config.yaml
   - aap-operator.yaml
+  - scos-boot-images.yaml
   - agentserviceconfig.yaml
   - assisted-routes.yaml
   - console-plugins.yaml

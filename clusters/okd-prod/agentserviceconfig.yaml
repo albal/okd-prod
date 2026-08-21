@@ -37,3 +37,13 @@ spec:
       version: "4.17.41"
       url: "https://mirror.openshift.com/pub/openshift-v4/x86_64/dependencies/rhcos/4.17/4.17.41/rhcos-4.17.41-x86_64-live.x86_64.iso"
       cpuArchitecture: x86_64
+    # OKD 4.22 / SCOS 10, for soup. Unlike the RHCOS entries above there is no
+    # upstream mirror to point at - OKD ships its live ISO inside the release
+    # payload only - so it is served in-cluster by scos-boot-images.yaml.
+    # version is the LIVE ISO's version (10.0.20251103-0, stream c10s), which is
+    # deliberately NOT the payload's machine-os displayVersion (10.0.20260806-0);
+    # the node pivots to the newer OS during install.
+    - openshiftVersion: "4.22"
+      version: "10.0.20251103-0"
+      url: "http://scos-iso.scos-boot-images.svc.cluster.local:8080/coreos-x86_64.iso"
+      cpuArchitecture: x86_64
