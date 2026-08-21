@@ -1,0 +1,118 @@
+---
+# soup - single-node OKD 4.22 on bare metal (supermicro, 192.168.102.0/24).
+#
+# Previously OCP 4.18.37, installed from img4.17.52-multi-appsub. Rebuilt on
+# OKD so the whole fleet is OKD rather than OCP.
+#
+# The boot ISO is served in-cluster by scos-boot-images.yaml and registered in
+# agentserviceconfig.yaml as openshiftVersion "4.22".
+#
+# Note: AgentClusterInstall.spec.imageSetRef is IMMUTABLE. Changing the target
+# version means deleting the AgentClusterInstall AND the ClusterDeployment -
+# assisted-service keeps the cluster registered at the old version in its DB
+# until the ClusterDeployment goes.
+#
+# The pullsecret-cluster-soup secret is NOT managed here (same as r230's) and
+# must exist in the soup namespace before the ClusterDeployment can sync.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: soup
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+---
+# quay.io/okd/scos-release:4.22.0-okd-scos.8 is the latest STABLE OKD 4
+# (published 2026-08-20). The 4.22.0-okd-scos.ec.* tags are older prereleases
+# from Feb-Mar 2026 despite the higher build numbers.
+apiVersion: hive.openshift.io/v1
+kind: ClusterImageSet
+metadata:
+  name: okd-4.22.0-scos-8
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  releaseImage: quay.io/okd/scos-release:4.22.0-okd-scos.8
+---
+apiVersion: hive.openshift.io/v1
+kind: ClusterDeployment
+metadata:
+  name: soup
+  namespace: soup
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  labels:
+    cluster.open-cluster-management.io/clusterset: default
+    hive.openshift.io/cluster-platform: agent-baremetal
+spec:
+  baseDomain: dev.tsew.net
+  clusterInstallRef:
+    group: extensions.hive.openshift.io
+    kind: AgentClusterInstall
+    name: soup
+    version: v1beta1
+  clusterName: soup
+  controlPlaneConfig:
+    servingCertificates: {}
+  installed: false
+  platform:
+    agentBareMetal:
+      agentSelector:
+        matchLabels:
+          agentBareMetal-generated-infraenv-ai-flow: soup
+  pullSecretRef:
+    name: pullsecret-cluster-soup
+---
+apiVersion: extensions.hive.openshift.io/v1beta1
+kind: AgentClusterInstall
+metadata:
+  name: soup
+  namespace: soup
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  clusterDeploymentRef:
+    name: soup
+  holdInstallation: false
+  imageSetRef:
+    name: okd-4.22.0-scos-8
+  # Single node: no apiVIPs/ingressVIPs are provisioned. DNS for
+  # api.soup.dev.tsew.net and *.apps.soup.dev.tsew.net must point at the node.
+  networking:
+    clusterNetwork:
+      - cidr: 10.128.0.0/14
+        hostPrefix: 23
+    serviceNetwork:
+      - 172.30.0.0/16
+    machineNetwork:
+      - cidr: 192.168.102.0/24
+    networkType: OVNKubernetes
+    userManagedNetworking: true
+  provisionRequirements:
+    controlPlaneAgents: 1
+    workerAgents: 0
+  sshPublicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCg0G1W6fUNC4B8EACAmL2OraPwn83VKsKlmwSBqOfnzTMRzZtlhXachicGC3hLkx84NOuWeWgP3VXs84YiKwQXhLUxw6XkKAgKyNmHaYX6RiVAomkqq4wdM+iCE4TVT6vHp0GdGBKZzWmFFW4KN9BEZAbL97eUvUFSJagi5itxKkIPv5oO0aXgKQf5A63n3D4HM1I/HZQsVo3SV8Jn/MxfnCxGo62aQGqrIP6bARW6c5SD6zbdXcAM+ZatnLX/F6x0tRal8M2gBokYWI7/gTx0Oh6jmd1GRNwkGXbIXj+7EidFvekIPBSmRYmmr94tHRmTxG8YqZwBJdw84ssDInYQylTFhwa1k1KCD3I777BA9y6df3pHZAl1SCLM5sirPXE8rtbXU4ZHkVsamaSwNHTV6Jfl1nLS628wpMN5021THF45GjS/mMEoMTEGOkj5g6zXvt/4rpbZNs9qaV39qTmoQ6rzY2G4B2rfYXHEnmuAHpBfYEg5YcvFUrcCBWPo1bc= al@CORSAIRONE
+---
+apiVersion: agent-install.openshift.io/v1beta1
+kind: InfraEnv
+metadata:
+  name: soup
+  namespace: soup
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  agentLabels:
+    agentBareMetal-generated-infraenv-ai-flow: soup
+  clusterRef:
+    name: soup
+    namespace: soup
+  cpuArchitecture: x86_64
+  imageType: full-iso
+  ipxeScriptType: DiscoveryImageAlways
+  nmStateConfigLabelSelector:
+    matchLabels:
+      infraenvs.agent-install.openshift.io: soup
+  pullSecretRef:
+    name: pullsecret-cluster-soup
+  sshAuthorizedKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCg0G1W6fUNC4B8EACAmL2OraPwn83VKsKlmwSBqOfnzTMRzZtlhXachicGC3hLkx84NOuWeWgP3VXs84YiKwQXhLUxw6XkKAgKyNmHaYX6RiVAomkqq4wdM+iCE4TVT6vHp0GdGBKZzWmFFW4KN9BEZAbL97eUvUFSJagi5itxKkIPv5oO0aXgKQf5A63n3D4HM1I/HZQsVo3SV8Jn/MxfnCxGo62aQGqrIP6bARW6c5SD6zbdXcAM+ZatnLX/F6x0tRal8M2gBokYWI7/gTx0Oh6jmd1GRNwkGXbIXj+7EidFvekIPBSmRYmmr94tHRmTxG8YqZwBJdw84ssDInYQylTFhwa1k1KCD3I777BA9y6df3pHZAl1SCLM5sirPXE8rtbXU4ZHkVsamaSwNHTV6Jfl1nLS628wpMN5021THF45GjS/mMEoMTEGOkj5g6zXvt/4rpbZNs9qaV39qTmoQ6rzY2G4B2rfYXHEnmuAHpBfYEg5YcvFUrcCBWPo1bc= al@CORSAIRONE
+# No NMStateConfig: soup's host uses DHCP on 192.168.102.0/24, unlike the
+# statically-addressed r230 nodes.

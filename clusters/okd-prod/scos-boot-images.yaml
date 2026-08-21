@@ -1,0 +1,126 @@
+---
+# In-cluster host for the OKD/SCOS live ISO used by assisted-image-service.
+#
+# OKD does not publish a standalone live ISO (the okd-project/okd GitHub
+# releases carry no .iso assets, and cloud.centos.org/centos/scos has no
+# artifact tree), while AgentServiceConfig.spec.osImages[].url is a required
+# string that only accepts a URL. The boot media ships inside the release
+# payload instead, so this serves it from the cluster.
+#
+# The ISO is not uploaded anywhere: the init container IS the release payload's
+# machine-os-images image, so the cluster pulls it straight from quay and copies
+# the ISO onto an emptyDir. That makes it self-healing - a restarted or
+# rescheduled pod repopulates from the node-cached image layer, with no PVC and
+# no dependency on any workstation.
+#
+# Digest resolved with:
+#   oc adm release info quay.io/okd/scos-release:4.22.0-okd-scos.8 \
+#     --image-for=machine-os-images
+#
+# In-container path differs by OKD major version:
+#   4.22 -> /coreos/coreos-x86_64.iso    (and coreos-stream.json)
+#   5.0  -> /coreos/coreos10-x86_64.iso  (and coreos10-stream.json)
+# Both are the same ISO: sha256 aff9c4a263d51356584d8334a20f13e24d04803e4eb9b49c2b499e0ad908e94a,
+# metal release 10.0.20251103-0, stream c10s, 918552576 bytes.
+#
+# Consumed by agentserviceconfig.yaml as:
+#   http://scos-iso.scos-boot-images.svc.cluster.local:8080/coreos-x86_64.iso
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: scos-boot-images
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scos-iso
+  namespace: scos-boot-images
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  labels:
+    app: scos-iso
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scos-iso
+  template:
+    metadata:
+      labels:
+        app: scos-iso
+    spec:
+      initContainers:
+        - name: copy-iso
+          image: quay.io/okd/scos-content@sha256:37e6a805e220d265e6da4930397404386feed71e8aad6c05fe501e5e2b8bafd2
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              cp -v /coreos/coreos-x86_64.iso /serve/coreos-x86_64.iso
+              cp -v /coreos/coreos-stream.json /serve/coreos-stream.json 2>/dev/null || true
+              ls -l /serve
+          volumeMounts:
+            - name: serve
+              mountPath: /serve
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+      containers:
+        # ubi9 nginx serves /opt/app-root/src on :8080 as an arbitrary UID,
+        # satisfying the restricted SCC with no securityContext needed.
+        - name: nginx
+          image: registry.access.redhat.com/ubi9/nginx-124:latest
+          command: ["nginx", "-g", "daemon off;"]
+          ports:
+            - containerPort: 8080
+              name: http
+          volumeMounts:
+            - name: serve
+              mountPath: /opt/app-root/src
+          readinessProbe:
+            httpGet:
+              path: /coreos-x86_64.iso
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+      volumes:
+        # ~876MB of node ephemeral storage, refilled from the image on restart.
+        - name: serve
+          emptyDir:
+            sizeLimit: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scos-iso
+  namespace: scos-boot-images
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  selector:
+    app: scos-iso
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
