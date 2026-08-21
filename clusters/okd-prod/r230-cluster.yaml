@@ -1,4 +1,39 @@
 ---
+# ############################################################################
+# DO NOT MERGE WITHOUT READING - MERGING THIS DESTROYS THE LIVE r230 CLUSTER
+# ############################################################################
+#
+# r230 is currently INSTALLED, healthy and Available, running OCP 4.19.42 on
+# four nodes, with real data on it:
+#
+#   openshift-operators/example-registry-quay-postgres-13     50Gi
+#   openshift-operators/example-registry-clair-postgres-15    50Gi
+#   openshift-storage/db-noobaa-db-pg-0                       50Gi
+#   openshift-storage/ocs-deviceset-0/1/2-data-*           3x 500Gi
+#   + 2x 20Gi clair indexer layer storage
+#
+# ~1.7TB across 8 bound PVCs, a Quay registry with its Postgres, a three-device
+# Ceph/ODF cluster, its own ArgoCD (app "r230-cluster") and cert-manager.
+#
+# There is NO OCP -> OKD upgrade path; this is a destroy-and-rebuild.
+# AgentClusterInstall.spec.imageSetRef is IMMUTABLE, so retargeting means
+# deleting the AgentClusterInstall AND the ClusterDeployment - and
+# spec.preserveOnDelete is unset, so deleting an installed ClusterDeployment
+# makes Hive DEPROVISION the nodes and wipe them.
+#
+# Argo runs this repo with automated {prune: true, selfHeal: true}. That means
+# MERGING IS THE DESTRUCTIVE ACT - Argo prunes the ClusterDeployment and
+# deprovision starts on its own. Nobody has to run a delete command.
+#
+# Prerequisites before this can succeed at all:
+#   1. Back up the Quay registry + Postgres and anything on the Ceph cluster.
+#   2. Ironic must be working. It is currently crash-looping on the
+#      COREOS_VERSION=9 vs SCOS-10 bug, so BMO cannot drive these iDRACs and
+#      the four nodes would need booting by hand from the discovery ISO.
+#   3. Prove OKD 4.22 installs on this hardware with soup first.
+#
+# See r230-okd422-runbook.md in this directory for the ordered procedure.
+# ############################################################################
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -46,8 +81,11 @@ spec:
   clusterDeploymentRef:
     name: r230
   holdInstallation: false
+  # Was img4.19.28-x86-64-appsub (OCP 4.19). OKD 4.22 imageset is defined in
+  # soup-cluster.yaml. IMMUTABLE - see the header: changing this requires
+  # deleting the AgentClusterInstall and the ClusterDeployment.
   imageSetRef:
-    name: img4.19.28-x86-64-appsub
+    name: okd-4.22.0-scos-8
   apiVIPs:
     - 192.168.101.10
   ingressVIPs:
