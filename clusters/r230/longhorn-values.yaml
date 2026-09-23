@@ -1,0 +1,29 @@
+# Helm values for longhorn/longhorn 1.12.1
+#   helm upgrade --install longhorn longhorn/longhorn --version 1.12.1 \
+#     -n longhorn-system --create-namespace -f longhorn-values.yaml
+openshift:
+  enabled: true
+  ui:
+    route: "longhorn-ui"
+    port: 443
+    proxy: 8443
+persistence:
+  defaultClass: true
+  defaultClassReplicaCount: 2
+  defaultDataLocality: best-effort
+defaultSettings:
+  # Single SSD per node shared with the OS; replicas live on /var.
+  defaultDataPath: /var/lib/longhorn
+  storageMinimalAvailablePercentage: 25
+  storageReservedPercentageForDefaultDisk: 15
+  # 1GbE links: 2 replicas keeps write fan-out down.
+  defaultReplicaCount: 2
+  replicaAutoBalance: best-effort
+  nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
+  nodeDrainPolicy: block-if-contains-last-replica
+image:
+  openshift:
+    oauthProxy:
+      registry: quay.io
+      repository: openshift/origin-oauth-proxy
+      tag: "4.22"

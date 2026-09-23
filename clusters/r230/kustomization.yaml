@@ -6,10 +6,6 @@ kind: Kustomization
 resources:
   - operatorhub.yaml
   - node-labels.yaml
-  - local-storage-operator.yaml
-  - LocalVolume.yaml
-  - StorageCluster.yaml
-  - StorageClass.yaml
   - cert-manager-operator.yaml
   - ClusterIssuer.yaml
   - certs.yaml
@@ -18,3 +14,4 @@ resources:
   - MachineConfigs.yaml
   - ssh-keys.yaml
   - kubevirt-operator.yaml
+  - longhorn-storage.yaml

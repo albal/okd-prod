@@ -1,0 +1,45 @@
+---
+# RWX block volumes that Longhorn can attach to two nodes at once during a
+# KubeVirt live migration. Default class for VM disks.
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: longhorn-vm
+  annotations:
+    storageclass.kubevirt.io/is-default-virt-class: "true"
+provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+parameters:
+  numberOfReplicas: "2"
+  staleReplicaTimeout: "30"
+  fromBackup: ""
+  fsType: "ext4"
+  dataLocality: "disabled"
+  migratable: "true"
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotClass
+metadata:
+  name: longhorn-snapshot
+  annotations:
+    snapshot.storage.kubernetes.io/is-default-class: "true"
+driver: driver.longhorn.io
+deletionPolicy: Delete
+parameters:
+  type: snap
+---
+# Tell CDI to create VM disks as RWX Block on longhorn-vm and clone via CSI.
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: StorageProfile
+metadata:
+  name: longhorn-vm
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  claimPropertySets:
+    - accessModes:
+        - ReadWriteMany
+      volumeMode: Block
+  cloneStrategy: csi-clone
