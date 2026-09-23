@@ -39,4 +39,14 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "3"
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
-spec: {}
+spec:
+  resourceRequirements:
+    # CDI's default 600M limit OOM-kills host-assisted copies onto
+    # longhorn-vm block volumes.
+    storageWorkloads:
+      limits:
+        cpu: "1"
+        memory: 2Gi
+      requests:
+        cpu: 100m
+        memory: 60M
