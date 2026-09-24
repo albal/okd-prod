@@ -5,7 +5,6 @@ kind: Kustomization
 # and gives you control over the order if necessary.
 resources:
   - operatorhub.yaml
-  - node-labels.yaml
   - cert-manager-operator.yaml
   - ClusterIssuer.yaml
   - certs.yaml
