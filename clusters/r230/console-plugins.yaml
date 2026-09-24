@@ -10,3 +10,4 @@ spec:
     - monitoring-plugin
     - networking-console-plugin
     - kubevirt-plugin
+    - netobserv-plugin-static
