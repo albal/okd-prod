@@ -27,7 +27,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 spec:
-  channel: stable-4.18  # Adjust to match your OKD major/minor version
+  channel: stable-4.22  # Adjust to match your OKD major/minor version
   installPlanApproval: Automatic
   name: odf-operator
   source: redhat-operators
