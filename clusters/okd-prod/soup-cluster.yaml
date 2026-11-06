@@ -53,7 +53,7 @@ spec:
   clusterName: soup
   controlPlaneConfig:
     servingCertificates: {}
-  installed: false
+  installed: true
   platform:
     agentBareMetal:
       agentSelector:
