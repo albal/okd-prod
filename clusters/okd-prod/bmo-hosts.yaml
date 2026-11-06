@@ -122,3 +122,40 @@ spec:
     address: idrac-virtualmedia://192.168.100.5/redfish/v1/Systems/System.Embedded.1
     credentialsName: dell5-secret
     disableCertificateVerification: true
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: supermicro-soup-secret
+  namespace: soup
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+type: Opaque
+data:
+  username: QURNSU4=
+  password: QURNSU4=
+---
+# supermicro-soup's BMC (Supermicro X-series) rejects Redfish virtual media
+# with OemLicenseNotPassed / "SUM DCMS OOB needed" (see
+# r230-okd422-runbook.md) - unlike the r230 iDRACs, its Redfish OOB features
+# are licence-gated. Same externally-provisioned, power-only model as r230:
+# BMO just power-cycles the host over IPMI, and it PXE-boots into the
+# discovery image from the standalone PXE box (192.168.101.2), not via
+# metal3 virtual-media.
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: supermicro-soup
+  namespace: soup
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+    inspect.metal3.io: disabled
+spec:
+  online: true
+  externallyProvisioned: true
+  bootMACAddress: ac:1f:6b:74:20:8e
+  automatedCleaningMode: disabled
+  bootMode: UEFI
+  bmc:
+    address: ipmi://192.168.100.159
+    credentialsName: supermicro-soup-secret
