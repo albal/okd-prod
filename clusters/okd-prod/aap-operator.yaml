@@ -25,7 +25,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 spec:
-  channel: stable-2.5
+  channel: stable-2.7
   installPlanApproval: Automatic
   name: ansible-automation-platform-operator
   source: redhat-operators
