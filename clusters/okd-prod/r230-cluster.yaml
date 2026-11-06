@@ -61,7 +61,7 @@ spec:
   clusterName: r230
   controlPlaneConfig:
     servingCertificates: {}
-  installed: false
+  installed: true
   platform:
     agentBareMetal:
       agentSelector:
