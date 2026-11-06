@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vault
+  namespace: openshift-gitops
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vault
+  sources:
+    # Vault server (HA Raft) + agent injector from the upstream chart.
+    - repoURL: https://helm.releases.hashicorp.com
+      chart: vault
+      targetRevision: 0.34.1
+      helm:
+        releaseName: vault
+        valueFiles:
+          - $values/clusters/vault/values.yaml
+    # values.yaml ref + auto-unsealer manifests.
+    - repoURL: https://github.com/albal/okd-prod.git
+      targetRevision: HEAD
+      path: clusters/vault
+      ref: values
+  ignoreDifferences:
+    # The injector patches its own caBundle at runtime.
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+      name: vault-agent-injector-cfg
+      jqPathExpressions:
+        - .webhooks[]?.clientConfig.caBundle
+  syncPolicy:
+    automated:
+      enabled: true
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - RespectIgnoreDifferences=true
+      - ServerSideApply=true

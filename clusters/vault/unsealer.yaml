@@ -1,0 +1,173 @@
+# Auto-unseal for Vault on okd.dev.
+#
+# There is no cloud KMS/HSM here, so a small controller does the work:
+#   1. Initialises vault-0 once (5 shares, threshold 3) and stores the keys
+#      and root token in Secret vault/vault-unseal-keys.
+#   2. Every 10s unseals any sealed vault-N pod (also completes Raft joins).
+#   3. Once, enables userpass and creates user admin/admin with full access.
+#
+# The unseal keys live in-cluster, so anyone who can read secrets in the
+# vault namespace can unseal Vault. Acceptable for this lab; not for prod data.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vault-unsealer
+  namespace: vault
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: vault-unsealer
+  namespace: vault
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["create"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames: ["vault-unseal-keys"]
+    verbs: ["get", "patch", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: vault-unsealer
+  namespace: vault
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: vault-unsealer
+subjects:
+  - kind: ServiceAccount
+    name: vault-unsealer
+    namespace: vault
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vault-unsealer
+  namespace: vault
+data:
+  unseal.sh: |
+    #!/bin/bash
+    set -uo pipefail
+    NS=vault
+    SECRET=vault-unseal-keys
+    ADMIN_USER="${ADMIN_USER:-admin}"
+    ADMIN_PASSWORD="${ADMIN_PASSWORD:-admin}"
+    export HOME=/tmp
+    log() { echo "$(date -u +%FT%TZ) $*"; }
+
+    key() { oc -n "$NS" get secret "$SECRET" -o "jsonpath={.data.$1}" 2>/dev/null | base64 -d; }
+
+    init_vault() {
+      local out
+      out=$(VAULT_ADDR="$1" vault operator init -key-shares=5 -key-threshold=3) || return 1
+      local args=(--from-literal=root-token="$(awk -F': ' '/Initial Root Token/{print $2}' <<<"$out")")
+      for i in 1 2 3 4 5; do
+        args+=(--from-literal=unseal-key-$i="$(awk -F': ' "/Unseal Key $i:/{print \$2}" <<<"$out")")
+      done
+      oc -n "$NS" create secret generic "$SECRET" "${args[@]}"
+    }
+
+    unseal() {
+      for i in 1 2 3; do
+        VAULT_ADDR="$1" vault operator unseal "$(key unseal-key-$i)" >/dev/null || return 1
+      done
+    }
+
+    bootstrap_admin() (
+      [ "$(oc -n "$NS" get secret "$SECRET" -o jsonpath='{.metadata.annotations.vault/admin-bootstrapped}')" = "true" ] && return 0
+      export VAULT_ADDR=http://vault-active.$NS.svc:8200
+      VAULT_TOKEN="$(key root-token)" || return 1
+      export VAULT_TOKEN
+      vault auth list | grep -q '^userpass/' || vault auth enable userpass || return 1
+      printf 'path "*" {\n  capabilities = ["create", "read", "update", "patch", "delete", "list", "sudo"]\n}\n' \
+        | vault policy write admin - || return 1
+      vault write "auth/userpass/users/$ADMIN_USER" password="$ADMIN_PASSWORD" token_policies=admin || return 1
+      oc -n "$NS" annotate secret "$SECRET" vault/admin-bootstrapped=true --overwrite
+      log "created userpass user $ADMIN_USER"
+    )
+
+    while true; do
+      for pod in $(oc -n "$NS" get pods -l app.kubernetes.io/name=vault,component=server -o jsonpath='{.items[*].metadata.name}'); do
+        addr="http://$pod.vault-internal.$NS.svc:8200"
+        status=$(VAULT_ADDR="$addr" vault status -format=json 2>/dev/null) || [ $? -eq 2 ] || { log "$pod: unreachable"; continue; }
+        if ! oc -n "$NS" get secret "$SECRET" >/dev/null 2>&1; then
+          if [ "$pod" = vault-0 ] && grep -q '"initialized": false' <<<"$status"; then
+            log "$pod: initialising Vault"
+            init_vault "$addr" || { log "$pod: init failed"; continue; }
+          else
+            continue
+          fi
+        fi
+        if grep -q '"sealed": true' <<<"$status"; then
+          if unseal "$addr"; then log "$pod: unsealed"; else log "$pod: unseal failed"; fi
+        fi
+      done
+      oc -n "$NS" get secret "$SECRET" >/dev/null 2>&1 && \
+        VAULT_ADDR=http://vault-active.$NS.svc:8200 vault status >/dev/null 2>&1 && \
+        { bootstrap_admin || log "admin bootstrap failed, will retry"; }
+      sleep 10
+    done
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-unsealer
+  namespace: vault
+  labels:
+    app: vault-unsealer
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: vault-unsealer
+  template:
+    metadata:
+      labels:
+        app: vault-unsealer
+    spec:
+      serviceAccountName: vault-unsealer
+      initContainers:
+        # Borrow the vault CLI from the same image the servers run.
+        - name: vault-cli
+          image: hashicorp/vault:2.0.4
+          command: ["cp", "/bin/vault", "/tools/vault"]
+          volumeMounts:
+            - name: tools
+              mountPath: /tools
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+      containers:
+        - name: unsealer
+          # OKD's oc CLI image (openshift/cli imagestream).
+          image: quay.io/okd/scos-content@sha256:11b71a35186880ea8d74fabd47ae02e156a70d4e0c31ab11dcdde0b32b3b302c
+          command: ["/bin/bash", "/scripts/unseal.sh"]
+          env:
+            - name: PATH
+              value: /tools:/usr/local/bin:/usr/bin:/bin
+          volumeMounts:
+            - name: tools
+              mountPath: /tools
+            - name: scripts
+              mountPath: /scripts
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+      volumes:
+        - name: tools
+          emptyDir: {}
+        - name: scripts
+          configMap:
+            name: vault-unsealer
